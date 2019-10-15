@@ -12,26 +12,42 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Build App
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-- task: DotNetCoreCLI@2
-  displayName: Package Artifact
-  inputs:
-    command: publish
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
-- task: PublishBuildArtifacts@1
-  inputs:
-   PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-   ArtifactName: drop
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'tmr-msdn'
-    appType: webApp
-    appName: 'tmr-sample-app'
-    package: $(Build.ArtifactStagingDirectory)/**/*.zip
+stages:
+- stage: Build Sample Web App
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    continueOnError: false
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: publish
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: true
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: drop
+
+- stage: Deploy Sample Web App
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    environment: 'SampleWebApp-prod'
+    strategy:
+     runOnce:
+       deploy:
+         steps:
+           - task: AzureWebApp@1
+             inputs:
+               azureSubscription: 'tmr-msdn'
+               appType: webApp
+               appName: 'tmr-sample-app'
+               package: $(Build.ArtifactStagingDirectory)/**/*.zip
