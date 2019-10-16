@@ -30,7 +30,7 @@ stages:
          Inline: |
            $params = @{
              ResourceGroupName = '$(resourceGroupName)'
-             TemplateFile = 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.json'
+             TemplateUri = 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.json'
              webAppName = '$(webAppName)'
            }
            New-AzResourceGroupDeployment @params
