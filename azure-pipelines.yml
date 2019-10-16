@@ -32,10 +32,7 @@ stages:
          templateLocation: 'URL of the file'
          csmFileLink: 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.json'
          csmParametersFileLink: 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.parameters.json'
-         overrideParameters: |
-           "webAppName": {
-               "value": "$(webAppName)"
-           }
+         overrideParameters: '-webAppName $(webAppName)'
          deploymentMode: 'Incremental'
 
 - stage: Build
