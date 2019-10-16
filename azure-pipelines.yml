@@ -14,6 +14,8 @@ variables:
   artifactName: 'drop'
   webAppName: 'tmr-sample-app'
   resourceGroupName: 'sample-app-rg'
+  azureSubscriptionName: 'tmr-msdn'
+  prodEnvName: 'SampleWebApp-prod'
 
 stages:
 - stage: Infrastructure
@@ -25,7 +27,7 @@ stages:
      steps:
      - task: AzurePowerShell@4
        inputs:
-         azureSubscription: 'tmr-msdn'
+         azureSubscription: '$(azureSubscriptionName)'
          ScriptType: 'InlineScript'
          Inline: |
            $params = @{
@@ -61,10 +63,10 @@ stages:
 
 - stage: Deploy
   jobs:
-  - deployment: Deploy
+  - deployment: Production
     pool:
       vmImage: 'Ubuntu-16.04'
-    environment: 'SampleWebApp-prod'
+    environment: '$(prodEnvName)'
     strategy:
      runOnce:
        deploy:
@@ -78,7 +80,7 @@ stages:
               downloadPath: '$(System.ArtifactsDirectory)'
          - task: AzureWebApp@1
            inputs:
-             azureSubscription: 'tmr-msdn'
+             azureSubscription: '$(azureSubscriptionName)'
              appType: webApp
              appName: '$(webAppName)'
              package: $(Build.ArtifactStagingDirectory)/**/*.zip
