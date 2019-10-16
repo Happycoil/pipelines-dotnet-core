@@ -30,8 +30,9 @@ stages:
          Inline: |
            $params = @{
              ResourceGroupName = '$(resourceGroupName)'
-             TemplateUri = 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.json'
-             TemplateParameterUri = 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.parameters.json'
+             TemplateFile = '$(Build.Repository.LocalPath)/ARM/azuredeploy.json'
+             webAppName = '$(webAppName)'
+             # TemplateParameterFile = '$(Build.Repository.LocalPath)/ARM/azuredeploy.parameters.json'
            }
            New-AzResourceGroupDeployment @params
          FailOnStandardError: true
