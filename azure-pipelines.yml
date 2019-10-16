@@ -32,7 +32,6 @@ stages:
              ResourceGroupName = '$(resourceGroupName)'
              TemplateFile = '$(Build.Repository.LocalPath)/ARM/azuredeploy.json'
              webAppName = '$(webAppName)'
-             # TemplateParameterFile = '$(Build.Repository.LocalPath)/ARM/azuredeploy.parameters.json'
            }
            New-AzResourceGroupDeployment @params
          FailOnStandardError: true
