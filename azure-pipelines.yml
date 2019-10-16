@@ -13,6 +13,7 @@ variables:
   buildConfiguration: 'Release'
   artifactName: 'drop'
   webAppName: 'tmr-sample-app'
+  resourceGroupName: 'sample-app-rg'
 
 stages:
 - stage: Infrastructure
@@ -22,18 +23,19 @@ stages:
        vmImage: 'Ubuntu-16.04'
      continueOnError: false
      steps:
-     - task: AzureResourceManagerTemplateDeployment@3
+     - task: AzurePowerShell@4
        inputs:
-         deploymentScope: 'Resource Group'
-         ConnectedServiceName: 'tmr-msdn'
-         action: 'Create Or Update Resource Group'
-         resourceGroupName: 'sample-app-rg'
-         location: 'West Europe'
-         templateLocation: 'URL of the file'
-         csmFileLink: 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.json'
-         csmParametersFileLink: 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.parameters.json'
-         overrideParameters: '-webAppName $(webAppName)'
-         deploymentMode: 'Incremental'
+         azureSubscription: 'tmr-msdn'
+         ScriptType: 'InlineScript'
+         Inline: |
+           $params = @{
+             ResourceGroupName = '$(resourceGroupName)'
+             TemplateFile = 'https://github.com/Azure/azure-quickstart-templates/blob/master/101-webapp-basic-windows/azuredeploy.json'
+             webAppName = '$(webAppName)'
+           }
+           New-AzResourceGroupDeployment @params
+         FailOnStandardError: true
+         azurePowerShellVersion: 'LatestVersion'
 
 - stage: Build
   jobs:
