@@ -32,7 +32,7 @@ stages:
          Inline: |
            $params = @{
              ResourceGroupName = '$(resourceGroupName)'
-             TemplateFile = '$(Build.Repository.LocalPath)/ARM/azuredeploy.json'
+             TemplateFile = '$(Build.Repository.LocalPath)/ARM/continuousDeployment.json'
              webAppName = '$(webAppName)'
            }
            New-AzResourceGroupDeployment @params
