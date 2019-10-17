@@ -72,8 +72,9 @@ stages:
      runOnce:
        deploy:
          steps:
+         - pwsh: gci -recurse
          - task: AzureWebApp@1
-           displayName: Deploy $(webAppName) To Production
+           displayName: Deploy Webapp To Production
            inputs:
              azureSubscription: '$(azureSubscriptionName)'
              appType: webApp
