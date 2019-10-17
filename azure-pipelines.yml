@@ -72,17 +72,10 @@ stages:
      runOnce:
        deploy:
          steps:
-         - download: none
-         - task: DownloadBuildArtifacts@0
-           inputs:
-              artifactName: $(artifactName)
-              buildType: 'current'
-              downloadType: 'single'
-              downloadPath: '$(System.ArtifactsDirectory)'
          - task: AzureWebApp@1
            displayName: Deploy $(webAppName) To Production
            inputs:
              azureSubscription: '$(azureSubscriptionName)'
              appType: webApp
              appName: '$(webAppName)'
-             package: $(Build.ArtifactStagingDirectory)/*.zip
+             package: $(Pipeline.Workspace)/*.zip
