@@ -20,12 +20,13 @@ variables:
 stages:
 - stage: Infrastructure
   jobs:
-   - job: BuildInfrastructure
+   - job: ProvisionAzureInfrastructure
      pool:
        vmImage: 'Ubuntu-16.04'
      continueOnError: false
      steps:
      - task: AzurePowerShell@4
+       displayName: Deploy Web App ARM Template to $(resourceGroupName)
        inputs:
          azureSubscription: '$(azureSubscriptionName)'
          ScriptType: 'InlineScript'
@@ -41,25 +42,25 @@ stages:
 
 - stage: Build
   jobs:
-  - job: Build
+  - job: BuildAndPublishArtifact
     pool:
       vmImage: 'Ubuntu-16.04'
     continueOnError: false
     steps:
     - task: DotNetCoreCLI@2
+      displayName: Build Project
       inputs:
         command: build
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
     - task: DotNetCoreCLI@2
+      displayName: Generate Build Artifact
       inputs:
         command: publish
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: true
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: $(artifactName)
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: $(artifactName)
 
 - stage: Deploy
   jobs:
@@ -79,6 +80,7 @@ stages:
               downloadType: 'single'
               downloadPath: '$(System.ArtifactsDirectory)'
          - task: AzureWebApp@1
+           displayName: Deploy $(webAppName) To Production
            inputs:
              azureSubscription: '$(azureSubscriptionName)'
              appType: webApp
