@@ -79,4 +79,4 @@ stages:
              azureSubscription: '$(azureSubscriptionName)'
              appType: webApp
              appName: '$(webAppName)'
-             package: $(Pipeline.Workspace)/*.zip
+             package: $(Pipeline.Workspace)/**/*.zip
