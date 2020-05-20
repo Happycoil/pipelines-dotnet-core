@@ -19,27 +19,27 @@ variables:
   Sytem.Debug: true
 
 stages:
-- stage: Infrastructure
-  jobs:
-   - job: ProvisionAzureInfrastructure
-     pool:
-       vmImage: 'Ubuntu-16.04'
-     continueOnError: false
-     steps:
-     - task: AzurePowerShell@4
-       displayName: Deploy Web App ARM Template to $(resourceGroupName)
-       inputs:
-         azureSubscription: '$(azureSubscriptionName)'
-         ScriptType: 'InlineScript'
-         Inline: |
-           $params = @{
-             ResourceGroupName = '$(resourceGroupName)'
-             TemplateFile = '$(Build.Repository.LocalPath)/ARM/continuousDeployment.json'
-             webAppName = '$(webAppName)'
-           }
-           New-AzResourceGroupDeployment @params
-         FailOnStandardError: true
-         azurePowerShellVersion: 'LatestVersion'
+# - stage: Infrastructure
+#   jobs:
+#    - job: ProvisionAzureInfrastructure
+#      pool:
+#        vmImage: 'Ubuntu-16.04'
+#      continueOnError: false
+#      steps:
+#      - task: AzurePowerShell@4
+#        displayName: Deploy Web App ARM Template to $(resourceGroupName)
+#        inputs:
+#          azureSubscription: '$(azureSubscriptionName)'
+#          ScriptType: 'InlineScript'
+#          Inline: |
+#            $params = @{
+#              ResourceGroupName = '$(resourceGroupName)'
+#              TemplateFile = '$(Build.Repository.LocalPath)/ARM/continuousDeployment.json'
+#              webAppName = '$(webAppName)'
+#            }
+#            New-AzResourceGroupDeployment @params
+#          FailOnStandardError: true
+#          azurePowerShellVersion: 'LatestVersion'
 
 - stage: Build
   jobs:
@@ -64,20 +64,20 @@ stages:
       artifact: $(artifactName)
     - task: owaspzap@1
 
-- stage: Deploy
-  jobs:
-  - deployment: Production
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    environment: '$(prodEnvName)'
-    strategy:
-     runOnce:
-       deploy:
-         steps:
-         - task: AzureWebApp@1
-           displayName: Deploy Webapp To Production
-           inputs:
-             azureSubscription: '$(azureSubscriptionName)'
-             appType: webApp
-             appName: '$(webAppName)'
-             package: $(Pipeline.Workspace)/**/*.zip
+# - stage: Deploy
+#   jobs:
+#   - deployment: Production
+#     pool:
+#       vmImage: 'Ubuntu-16.04'
+#     environment: '$(prodEnvName)'
+#     strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - task: AzureWebApp@1
+#            displayName: Deploy Webapp To Production
+#            inputs:
+#              azureSubscription: '$(azureSubscriptionName)'
+#              appType: webApp
+#              appName: '$(webAppName)'
+#              package: $(Pipeline.Workspace)/**/*.zip
