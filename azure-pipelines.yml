@@ -62,6 +62,7 @@ stages:
         zipAfterPublish: true
     - publish: $(Build.ArtifactStagingDirectory)
       artifact: $(artifactName)
+    - task: owaspzap@1
 
 - stage: Deploy
   jobs:
