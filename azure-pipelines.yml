@@ -40,7 +40,27 @@ stages:
         zipAfterPublish: true
     - publish: $(Build.ArtifactStagingDirectory)
       artifact: $(artifactName)
-    - script: dotnet run &
-    - task: owaspzap@1
+- stage: Deploy
+  jobs:
+  - job: DeployWebApp
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureRmWebAppDeployment@4
       inputs:
-        port: 5001
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'tmr-msdn'
+        appType: 'webApp'
+        WebAppName: 'tm-test-app'
+        packageForLinux: '$(System.ArtifactStagingDirectory)/**/*.zip'
+- stage: Pentest
+  jobs:
+    - job: RunOWASPZap
+      pool:
+        vmimage: 'ubuntu-latest'
+      steps:
+      - task: owaspzap@1
+        inputs:
+          scantype: 'targetedScan'
+          url: 'https://tm-test-app.azurewebsites.net/'
+          port: '443'
