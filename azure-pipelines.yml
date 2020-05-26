@@ -42,3 +42,5 @@ stages:
       artifact: $(artifactName)
     - script: dotnet run &
     - task: owaspzap@1
+      inputs:
+        port: 5001
