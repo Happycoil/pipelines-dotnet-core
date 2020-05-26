@@ -55,7 +55,7 @@ stages:
         appType: 'webApp'
         WebAppName: $(webAppName)
         packageForLinux: $(Build.SourcesDirectory)/bin/*.zip
-- stage: Pentest
+- stage: Security
   jobs:
     - job: RunOWASPZap
       pool:
@@ -65,3 +65,4 @@ stages:
         parameters:
           url: 'https://$(webAppName).azurewebsites.net/'
           port: '443'
+          aggressiveMode: false
