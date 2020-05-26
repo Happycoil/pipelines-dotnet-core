@@ -63,6 +63,6 @@ stages:
       steps:
       - template: pentest.yml
         parameters:
-          url: 'https://$(webAppName).azurewebsites.net/'
+          url: "https://$(webAppName).azurewebsites.net/"
           port: '443'
           aggressiveMode: false
