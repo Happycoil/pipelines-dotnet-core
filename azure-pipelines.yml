@@ -46,13 +46,17 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: 'WebApp'
+        path: $(Build.SourcesDirectory)/bin
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: 'tmr-msdn'
         appType: 'webApp'
         WebAppName: 'tm-test-app'
-        packageForLinux: '$(System.ArtifactStagingDirectory)/**/*.zip'
+        packageForLinux: $(Build.SourcesDirectory)/bin/*.zip
 - stage: Pentest
   jobs:
     - job: RunOWASPZap
