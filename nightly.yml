@@ -2,7 +2,7 @@ name: tm-test-app-nightly
 
 schedules:
 - cron: "0 0 * * *"
-  displayName: Daily midnight build
+  displayName: 'Nightly Security Scan'
   branches:
     include:
     - master
