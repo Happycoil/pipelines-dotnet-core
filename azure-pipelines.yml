@@ -40,5 +40,5 @@ stages:
         zipAfterPublish: true
     - publish: $(Build.ArtifactStagingDirectory)
       artifact: $(artifactName)
-    - script: dotnet run
+    - script: dotnet run &
     - task: owaspzap@1
