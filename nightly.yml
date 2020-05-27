@@ -16,4 +16,4 @@ steps:
   parameters:
     url: "https://$(webAppName).azurewebsites.net/"
     port: '443'
-    aggressive: false
+    aggressive: true
