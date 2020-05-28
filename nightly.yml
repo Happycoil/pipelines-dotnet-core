@@ -12,7 +12,7 @@ variables:
   webAppName: 'tm-test-app'
 
 steps:
-- template: pentest.yml
+- template: pentest-pwsh.yml
   parameters:
     url: "https://$(webAppName).azurewebsites.net/"
     port: '443'
