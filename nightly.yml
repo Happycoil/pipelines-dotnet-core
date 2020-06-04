@@ -14,9 +14,7 @@ variables:
 stages:
 - stage: Security
   jobs:
-  - job: RunOWASPZap
-    pool:
-      vmImage: 'Ubuntu-16.04'
+  - job: ActiveScans
     steps:
     - template: pentest-pwsh.yml
       parameters:
