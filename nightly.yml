@@ -11,9 +11,15 @@ pool:
 variables:
   webAppName: 'tm-test-app'
 
-steps:
-- template: pentest-pwsh.yml
-  parameters:
-    url: "https://$(webAppName).azurewebsites.net/"
-    port: '443'
-    aggressive: true
+stages:
+- stage: Security
+  jobs:
+  - job: Run OWASP ZAP
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - template: pentest-pwsh.yml
+      parameters:
+        url: "https://$(webAppName).azurewebsites.net/"
+        port: '443'
+        aggressive: true
