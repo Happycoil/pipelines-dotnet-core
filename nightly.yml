@@ -14,7 +14,7 @@ variables:
 stages:
 - stage: Security
   jobs:
-  - job: Run OWASP ZAP
+  - job: RunOWASPZap
     pool:
       vmImage: 'Ubuntu-16.04'
     steps:
